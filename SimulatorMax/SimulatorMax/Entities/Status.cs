@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulatorMax.Entities
+
+namespace CLOFT.SerenUp.Simulator.Entities
 {
     public class Status
     {

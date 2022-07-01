@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulatorMax.Entities
+
+namespace CLOFT.SerenUp.Simulator.Entities
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class Message

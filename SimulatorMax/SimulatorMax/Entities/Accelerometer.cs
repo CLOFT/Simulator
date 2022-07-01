@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulatorMax
+namespace CLOFT.SerenUp.Simulator
 {
     public class Accelerometer
     {
