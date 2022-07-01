@@ -44,7 +44,7 @@ message.Steps = rand.Next(3000, 5000);
 
 
 //Tempo di attesa fra un'esecuzione e l'altra
-var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+var timer = new PeriodicTimer(TimeSpan.FromSeconds(10));
 //
 //MAIN
 if (chase == 0)
@@ -150,9 +150,15 @@ if (chase > 0)
 
             message.OxygenSaturation = rand.Next(95, 100);
 
-            message.BloodPressure.SystolicPressure = rand.Next(100, 141);
+            message.BloodPressure.SystolicPressure = rand.Next(109, 130);
 
-            message.BloodPressure.DiastolicPressure = rand.Next(60, 101);
+            message.BloodPressure.DiastolicPressure = rand.Next(70, 86);
+
+            message.Accelerometer.Xaxis = 0;
+
+            message.Accelerometer.Yaxis = -1;
+
+            message.Accelerometer.Zaxis = 0;
 
 
 
@@ -166,13 +172,13 @@ if (chase > 0)
 
             message.OxygenSaturation = rand.Next(95, 100);
 
-            message.BloodPressure.SystolicPressure = rand.Next(100, 141);
+            message.BloodPressure.SystolicPressure = rand.Next(109, 130);
 
-            message.BloodPressure.DiastolicPressure = rand.Next(60, 101);
+            message.BloodPressure.DiastolicPressure = rand.Next(70, 86);
 
-            message.Accelerometer.Yaxis = rand.Next(-1, 2);
-            message.Accelerometer.Xaxis = rand.Next(0, 2);
-            message.Accelerometer.Zaxis = rand.Next(0,2);
+            message.Accelerometer.Yaxis = rand.Next(-1, 3);
+            message.Accelerometer.Xaxis = rand.Next(-1, 3);
+            message.Accelerometer.Zaxis = rand.Next(-1,3);
 
             int fall = rand.Next(0, 6);
             Console.WriteLine("Probabilità su 5 di cadere "+ fall);
@@ -196,12 +202,12 @@ if (chase > 0)
 
             message.OxygenSaturation = rand.Next(95, 100);
 
-            message.BloodPressure.SystolicPressure = rand.Next(100, 141);
+            message.BloodPressure.SystolicPressure = rand.Next(109, 130);
 
-            message.BloodPressure.DiastolicPressure = rand.Next(60, 101);
+            message.BloodPressure.DiastolicPressure = rand.Next(70, 86);
 
-            message.Accelerometer.Yaxis = rand.Next(-2, 3);
-            message.Accelerometer.Xaxis = rand.Next(-1, 3);
+            message.Accelerometer.Yaxis = rand.Next(-3, 3);
+            message.Accelerometer.Xaxis = rand.Next(-2, 3);
             message.Accelerometer.Zaxis = rand.Next(-1, 3);
 
 
@@ -284,8 +290,8 @@ static void Send(string data)
 
     using (var streamwriter = new StreamWriter(httpWebRequest.GetRequestStream()))
     {
-        Console.WriteLine("------prova invio all'api gateway-----------");
         streamwriter.Write(data);
+        Console.WriteLine("------Invio EFFETTUATO-----------");
         Console.WriteLine(data);
     }
 
