@@ -87,28 +87,11 @@ if (chase == 0)
     Console.WriteLine("Battery status " + message.Battery + "%");
     json = JsonConvert.SerializeObject(message);
     Console.WriteLine(json);
-    var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://8pde42ss4h.execute-api.eu-west-1.amazonaws.com/braceletsdata");
-    httpWebRequest.ContentType = "application/json";
-    httpWebRequest.Method = "post";
-
-    using (var streamwriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-    {
-        Console.WriteLine("-----------prova invio all'api gateway-----------");
-        streamwriter.Write(json);
-        Console.WriteLine(json);
-    }
-
-    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-    {
-        var result = streamReader.ReadToEnd();
-
-    }
-
+    Send(json); //Invio dati all'API Gateway
     message.Battery--;
     counter--;
-    chase++;
-   
+    chase++
+   ;
 
     Console.WriteLine("----------------------END FIRST CASE ------------------------");
 }
@@ -162,7 +145,7 @@ if (chase > 0)
 
         if (message.Status.stop == true)
         {
-            Console.WriteLine("Variazione per lo stop");
+            Console.WriteLine("Variazione per lo STOP");
             message.Heartbeat = message.Heartbeat - 5;
 
             message.OxygenSaturation = rand.Next(95, 100);
@@ -176,7 +159,7 @@ if (chase > 0)
         }
         else if (message.Status.walk == true)
         {
-            Console.WriteLine("Variazione per il walk");
+            Console.WriteLine("Variazione per il WALK");
             message.Steps = message.Steps + 300;
 
             message.Heartbeat = rand.Next(85, 96);
@@ -206,7 +189,7 @@ if (chase > 0)
         }
         else if (message.Status.run == true)
         {
-            Console.WriteLine("Variazione per il run");
+            Console.WriteLine("Variazione per il RUN");
             message.Steps = message.Steps + 800;
 
             message.Heartbeat = rand.Next(100, 111);
@@ -230,7 +213,7 @@ if (chase > 0)
                 if (res > compared)
                 {
                     message.Alarm = "FALL";
-                    Console.WriteLine("caduto");
+                    Console.WriteLine("CADUTO");
                 }
 
             }
@@ -253,23 +236,8 @@ if (chase > 0)
         Console.WriteLine("Battery status " + message.Battery + "%");
         json = JsonConvert.SerializeObject(message);
         Console.WriteLine(json);
-        var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://8pde42ss4h.execute-api.eu-west-1.amazonaws.com/braceletsdata");
-        httpWebRequest.ContentType = "application/json";
-        httpWebRequest.Method = "post";
-
-        using (var streamwriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-        {
-            Console.WriteLine("------prova invio all'api gateway-----------");
-            streamwriter.Write(json);
-            Console.WriteLine(json);
-        }
-
-        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-        using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-        {
-            var result = streamReader.ReadToEnd();
-
-        }
+        Send(json); //Invio dati all'API Gateway
+        
         message.Battery--;
         Console.WriteLine("----------------END CASE (2+) -------------------------");
     }
@@ -307,4 +275,24 @@ static string Position(int x)
         return pos;
     };
   
+}
+static void Send(string data)
+{
+    var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://8pde42ss4h.execute-api.eu-west-1.amazonaws.com/braceletsdata");
+    httpWebRequest.ContentType = "application/json";
+    httpWebRequest.Method = "post";
+
+    using (var streamwriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+    {
+        Console.WriteLine("------prova invio all'api gateway-----------");
+        streamwriter.Write(data);
+        Console.WriteLine(data);
+    }
+
+    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+    {
+        var result = streamReader.ReadToEnd();
+
+    }
 }
