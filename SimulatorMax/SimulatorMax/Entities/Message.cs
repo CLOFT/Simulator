@@ -20,7 +20,7 @@ namespace CLOFT.SerenUp.Simulator.Entities
         [JsonProperty]
         public int Steps { get; set; }
         [JsonProperty]
-        public int Heartbeat { get; set; }
+        public int HeartBeat { get; set; }
         [JsonProperty]
         public BloodPressure BloodPressure { get; set; }
         [JsonProperty]
