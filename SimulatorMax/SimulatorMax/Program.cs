@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Net;
 using CLOFT.SerenUp.Simulator;
 using CLOFT.SerenUp.Simulator.Entities;
+using Newtonsoft.Json.Serialization;
 
 
 
@@ -85,7 +86,14 @@ if (chase == 0)
     Console.WriteLine("Pressione arteriosa diastolica " + message.BloodPressure.DiastolicPressure);
     Console.WriteLine("saturazione del sangue " + message.OxygenSaturation + "%");
     Console.WriteLine("Battery status " + message.Battery + "%");
-    json = JsonConvert.SerializeObject(message);
+    json = JsonConvert.SerializeObject(message, new JsonSerializerSettings
+    {
+        ContractResolver = new DefaultContractResolver
+        {
+            NamingStrategy = new CamelCaseNamingStrategy()
+        },
+        Formatting = Formatting.Indented,
+    });
     Console.WriteLine(json);
     Send(json); //Invio dati all'API Gateway
     message.Battery--;
@@ -240,7 +248,14 @@ if (chase > 0)
         Console.WriteLine("Pressione arteriosa diastolica " + message.BloodPressure.DiastolicPressure);
         Console.WriteLine("saturazione del sangue " + message.OxygenSaturation + "%");
         Console.WriteLine("Battery status " + message.Battery + "%");
-        json = JsonConvert.SerializeObject(message);
+        json = JsonConvert.SerializeObject(message, new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            },
+            Formatting = Formatting.Indented,
+        });
         Console.WriteLine(json);
         Send(json); //Invio dati all'API Gateway
         
