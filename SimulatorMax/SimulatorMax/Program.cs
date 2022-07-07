@@ -9,47 +9,40 @@ using CLOFT.SerenUp.Simulator;
 using CLOFT.SerenUp.Simulator.Entities;
 using Newtonsoft.Json.Serialization;
 
-
-
 //Simulator MAX
-//Variabili per i casi
 
-int counter = 100;
-int chase = 0;
-
-var rand = new Random();
-int res = 0;
-
-int compared = 1;
-int status = 0;
-int positions = 0;
-
-string json = "";
-//CLIENT
-HttpClient client = new HttpClient();
-
-//DATA TO SEND
-Message message = new Message();
-message.Accelerometer = new Accelerometer();
-message.BloodPressure = new BloodPressure();
-message.Status = new Status();
-message.SerialNumber = Guid.NewGuid();
-
-//Data 1 run
-message.Battery = 23;
-message.Accelerometer.Xaxis = 0;
-message.Accelerometer.Yaxis = -1;
-message.Accelerometer.Zaxis = 0;
-message.Steps = rand.Next(3000, 5000);
 
 
 
 //Tempo di attesa fra un'esecuzione e l'altra
-var timer = new PeriodicTimer(TimeSpan.FromSeconds(10));
-//
-//MAIN
-if (chase == 0)
+//var timer = new PeriodicTimer(TimeSpan.FromSeconds(10));
+//await timer.WaitForNextTickAsync()
+Generator();
+
+static void FirstGenerate()
 {
+    //Variabile per il random
+    var rand = new Random();
+
+    string json = "";
+    //CLIENT
+    HttpClient client = new HttpClient();
+
+    //DATA TO SEND
+    Message message = new Message();
+    message.Accelerometer = new Accelerometer();
+    message.BloodPressure = new BloodPressure();
+    message.Status = new Status();
+    message.SerialNumber = Guid.NewGuid();
+
+    //Data 1 run
+    message.Battery = 100;
+    message.Accelerometer.Xaxis = 0;
+    message.Accelerometer.Yaxis = -1;
+    message.Accelerometer.Zaxis = 0;
+    message.Steps = rand.Next(3000, 5000);
+
+
     DateTimeOffset now = DateTimeOffset.UtcNow;
     string currentTimeString = (now.ToUnixTimeMilliseconds()).ToString();
     message.Time = currentTimeString;
@@ -57,8 +50,8 @@ if (chase == 0)
     message.Status.walk = false;
     message.Status.run = false;
 
-    //HEARTBEAT
-    message.Heartbeat = rand.Next(60, 80);
+    //HeartBeat
+    message.HeartBeat = rand.Next(60, 80);
 
     //SYSTOLIC PRESSURE
 
@@ -81,7 +74,7 @@ if (chase == 0)
     Console.WriteLine("Time:" + message.Time);
     Console.WriteLine("Steps " + message.Steps);
     Console.WriteLine("Position "+ message.Position);
-    Console.WriteLine("Frequenza del battito cardiaco " + message.Heartbeat);
+    Console.WriteLine("Frequenza del battito cardiaco " + message.HeartBeat);
     Console.WriteLine("Pressione arteriosa sistolica " + message.BloodPressure.SystolicPressure);
     Console.WriteLine("Pressione arteriosa diastolica " + message.BloodPressure.DiastolicPressure);
     Console.WriteLine("saturazione del sangue " + message.OxygenSaturation + "%");
@@ -95,20 +88,46 @@ if (chase == 0)
         Formatting = Formatting.Indented,
     });
     Console.WriteLine(json);
-    Send(json); //Invio dati all'API Gateway
+    //Send(json); //Invio dati all'API Gateway
     message.Battery--;
-    counter--;
-    chase++
+    
+    
+
    ;
 
     Console.WriteLine("----------------------END FIRST CASE ------------------------");
 }
 //SECOND + N RUN
-if (chase > 0)
+static void SecondGeneration(Message message)
 {
-    while (await timer.WaitForNextTickAsync())
-    {
-        if (message.Battery == 20 || message.Battery == 15 || message.Battery == 10 || message.Battery == 5)
+    
+
+    var rand = new Random();
+    int res = 0;
+
+    int compared = 1;
+    int status = 0;
+    int positions = 0;
+
+    string json = "";
+    //CLIENT
+    HttpClient client = new HttpClient();
+
+    //DATA TO SEND
+    
+    message.Accelerometer = new Accelerometer();
+    message.Status = new Status();
+
+
+    //Data  run
+    message.Accelerometer.Xaxis = 0;
+    message.Accelerometer.Yaxis = -1;
+    message.Accelerometer.Zaxis = 0;
+    message.Steps = rand.Next(3000, 5000);
+    
+
+
+    if (message.Battery == 20 || message.Battery == 15 || message.Battery == 10 || message.Battery == 5)
         {
             Console.WriteLine("Batteria in via di esaurimento");
             message.Alarm = "LOW_BATTERY";
@@ -120,7 +139,7 @@ if (chase > 0)
         if (message.Battery == 0)
         {
             Console.WriteLine ("END_BATTERY");
-            break;
+            Environment.Exit(0);
         }
 
         DateTimeOffset now = DateTimeOffset.UtcNow;
@@ -154,7 +173,7 @@ if (chase > 0)
         if (message.Status.stop == true)
         {
             Console.WriteLine("Variazione per lo STOP");
-            message.Heartbeat = message.Heartbeat - 5;
+            message.HeartBeat = message.HeartBeat - 5;
 
             message.OxygenSaturation = rand.Next(95, 100);
 
@@ -176,7 +195,7 @@ if (chase > 0)
             Console.WriteLine("Variazione per il WALK");
             message.Steps = message.Steps + 300;
 
-            message.Heartbeat = rand.Next(85, 96);
+            message.HeartBeat = rand.Next(85, 96);
 
             message.OxygenSaturation = rand.Next(95, 100);
 
@@ -206,7 +225,7 @@ if (chase > 0)
             Console.WriteLine("Variazione per il RUN");
             message.Steps = message.Steps + 800;
 
-            message.Heartbeat = rand.Next(100, 111);
+            message.HeartBeat = rand.Next(100, 111);
 
             message.OxygenSaturation = rand.Next(95, 100);
 
@@ -235,15 +254,11 @@ if (chase > 0)
 
         }
         
-          
-
-
-    
         Console.WriteLine("ID " + message.SerialNumber);
         Console.WriteLine("Time:" + message.Time);
         Console.WriteLine("Steps " + message.Steps);
         Console.WriteLine("Position " + message.Position);
-        Console.WriteLine("Frequenza del battito cardiaco " + message.Heartbeat);
+        Console.WriteLine("Frequenza del battito cardiaco " + message.HeartBeat);
         Console.WriteLine("Pressione arteriosa sistolica " + message.BloodPressure.SystolicPressure);
         Console.WriteLine("Pressione arteriosa diastolica " + message.BloodPressure.DiastolicPressure);
         Console.WriteLine("saturazione del sangue " + message.OxygenSaturation + "%");
@@ -257,16 +272,16 @@ if (chase > 0)
             Formatting = Formatting.Indented,
         });
         Console.WriteLine(json);
-        Send(json); //Invio dati all'API Gateway
+        //Send(json); //Invio dati all'API Gateway
         
         message.Battery--;
-        Console.WriteLine("----------------END CASE (2+) -------------------------");
-    }
+        Console.WriteLine("----------------END CASE -------------------------");
+    
 }
 
 static int Fall(int x, int y, int z)
 {
-    //Fissa momentanemante
+
  
     Console.WriteLine("Asse y all'impatto " + y);
     Console.WriteLine("Asse x all'impatto " + x);
@@ -316,4 +331,59 @@ static void Send(string data)
         var result = streamReader.ReadToEnd();
 
     }
+}
+
+static void Generator()
+{
+        HttpWebRequest WebReq = (HttpWebRequest)WebRequest.Create(string.Format("https://hepj2fzca6.execute-api.eu-west-1.amazonaws.com/api/Bracelets"));
+
+        WebReq.Method = "GET";
+
+        HttpWebResponse WebResp = (HttpWebResponse)WebReq.GetResponse();
+
+        Console.WriteLine(WebResp.StatusCode + "Get from Relation DB");
+       
+
+        string jsonString;
+        using (Stream stream = WebResp.GetResponseStream())   //modified from your code since the using statement disposes the stream automatically when done
+        {
+            StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+            jsonString = reader.ReadToEnd();
+        }
+        var bracelets = JsonConvert.DeserializeObject<List<Bracelets>>(jsonString);
+    
+        foreach (var b in bracelets)
+        {
+                // get last data /api/BraceletsData/{serialNumber}
+                Guid id = b.SerialNumber;
+                HttpWebRequest WebReq2 = (HttpWebRequest)WebRequest.Create(string.Format("https://hepj2fzca6.execute-api.eu-west-1.amazonaws.com/api/BraceletsData/8d547248-9cfb-480d-86bd-f572e67da86f"));
+
+                WebReq2.Method = "GET";
+
+                HttpWebResponse WebResp2 = (HttpWebResponse)WebReq2.GetResponse();
+
+                Console.WriteLine(WebResp2.StatusCode + "Get from Timestream");
+
+
+                string StringJson;
+                using (Stream stream = WebResp2.GetResponseStream())   //modified from your code since the using statement disposes the stream automatically when done
+                {
+                    StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                    StringJson = reader.ReadToEnd();
+                }
+            
+            if (StringJson == null)//datapresenti
+            {
+                FirstGenerate();
+            }
+            else
+            {
+                var braceletsData = JsonConvert.DeserializeObject<List<Message>>(StringJson);
+                foreach (var n in braceletsData)
+                {
+                    SecondGeneration(n);
+                }
+            }
+          
+        }         
 }
