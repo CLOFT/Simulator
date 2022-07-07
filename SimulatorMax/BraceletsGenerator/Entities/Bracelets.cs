@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CLOFT.SerenUp.Simulator.Entities
+namespace BraceletsGenerator.Entities
 {
     public class Bracelets
     {
@@ -12,6 +13,6 @@ namespace CLOFT.SerenUp.Simulator.Entities
 
         public string Username { get; set; }
 
-        public string Color     { get; set; }
+        public string Color { get; set; }
     }
 }
