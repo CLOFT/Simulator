@@ -24,7 +24,7 @@ string json = "";
 for (int i = 0; i < 10; i++)
 {
     colors = arrColor[rand.Next(0, arrColor.Length)];
-    bracelets.Add(new Bracelets() { SerialNumber = Guid.NewGuid(), Color = colors, Username = ""});
+    bracelets.Add(new Bracelets() { SerialNumber = Guid.NewGuid(), Color = colors });
     
 }
 //TODO metodo send per mandare i bracialetti creati sul DB Relazionale
@@ -35,16 +35,18 @@ foreach (var b in bracelets)
     Console.WriteLine(b.Username);
     Console.WriteLine(b.Color);
     Console.WriteLine(b.Serendipity);
-}
-json = JsonConvert.SerializeObject(bracelets, new JsonSerializerSettings
-{
-    ContractResolver = new DefaultContractResolver
+
+    json = JsonConvert.SerializeObject(b, new JsonSerializerSettings
     {
-        NamingStrategy = new CamelCaseNamingStrategy()
-    },
-    Formatting = Formatting.Indented,
-});
-Send(json);
+        ContractResolver = new DefaultContractResolver
+        {
+            NamingStrategy = new CamelCaseNamingStrategy()
+        },
+        Formatting = Formatting.Indented,
+    });
+    Send(json);
+}
+
 
 //POST DA IMPLEMENTARE
 static void Send(string data)
