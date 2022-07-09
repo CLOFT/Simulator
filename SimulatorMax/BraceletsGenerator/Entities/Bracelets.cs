@@ -14,6 +14,6 @@ namespace BraceletsGenerator.Entities
         public string? Username { get; set; }
 
         public string Color { get; set; }
-        public int Serendipity { get; set; }
+        public int? Serendipity { get; set; } 
     }
 }
